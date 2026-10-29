@@ -1,6 +1,7 @@
 #include <iostream>
 #include <locale>
 #include <string>
+#include <limits>
 #include "modAlphaCipher.h"
 
 using namespace std;
@@ -15,7 +16,7 @@ int main() {
 
     try {
         wcout << L"Введите ключ для шифра Гронсфельда: ";
-        wcin >> key;
+        getline(wcin, key);
         
         modAlphaCipher cipher(key);
         wcout << L"Ключ успешно загружен.\n";
@@ -23,6 +24,7 @@ int main() {
         do {
             wcout << L"\nВыберите операцию (0 - выход, 1 - зашифровать, 2 - расшифровать): ";
             wcin >> op;
+            wcin.ignore(numeric_limits<streamsize>::max(), L'\n');
 
             if (op > 2) {
                 wcout << L"Недопустимая операция.\n";
@@ -30,8 +32,9 @@ int main() {
             }
             if (op == 0) break;
 
+
             wcout << L"Введите текст: ";
-            wcin >> text;
+            getline(wcin, text);
 
             if (op == 1) {
                 wcout << L"Зашифрованный текст: " << cipher.encrypt(text) << endl;
