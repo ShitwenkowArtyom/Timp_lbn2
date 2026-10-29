@@ -2,6 +2,7 @@
 #include <locale>
 #include <string>
 #include <limits>
+#include <stdexcept>
 #include "transpositionCipher.h"
 
 using namespace std;
@@ -29,14 +30,16 @@ int main() {
             size_t pos;
             key = std::stoi(keyStr, &pos);
             if (pos != keyStr.size()) {
-                throw invalid_argument("Лишние символы");
+                throw std::invalid_argument("Extra characters");
             }
             cipher = new TranspositionCipher(key);
             wcout << L"Ключ успешно загружен.\n";
-        } catch (const exception& e) {
-            wcerr << L"Ошибка ввода ключа: " << e.what() << L".\n";
         } catch (const cipher_error& e) {
             wcerr << L"Ошибка: " << e.what() << L".\n";
+        } catch (const std::out_of_range&) {
+            wcerr << L"Ошибка: введённое число слишком велико.\n";
+        } catch (const std::invalid_argument&) {
+            wcerr << L"Ошибка: ключ должен быть числом.\n";
         }
     }
 
@@ -59,7 +62,7 @@ int main() {
         }
         if (op == 0) break;
 
-        wcout << L"Введите текст (или нажмите Enter для пустого): ";
+        wcout << L"Введите текст: ";
         getline(wcin, text);
 
         try {
@@ -76,3 +79,4 @@ int main() {
     delete cipher;
     return 0;
 }
+
